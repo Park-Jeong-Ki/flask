@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>키워드 검색</title>
+    <style>
+        /* CSS 코드 */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .search-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        #keyword-input {
+            width: 200px;
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        #search-results {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: auto;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <input type="text" id="keyword-input" placeholder="검색할 키워드를 입력하세요">
+        <button onclick="searchKeyword()">검색</button>
+    </div>
+    <div id="loading">검색 중...</div>
+    <div id="search-results"></div>
+
+    <script>
+        // JavaScript 코드
+        function searchKeyword() {
+            var keyword = document.getElementById('keyword-input').value;
+            var url = 'https://port-0-flask-9zxht12blqktv8kd.sel4.cloudtype.app/search';
+            
+            // 검색 중 메시지 표시
+            document.getElementById('loading').style.display = 'block';
+
+            fetch(url + '?keyword=' + encodeURIComponent(keyword))
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data);
+                    document.getElementById('loading').style.display = 'none';  // 검색 완료시 메시지 숨김
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('loading').style.display = 'none';  // 에러시 메시지 숨김
+                });
+        }
+
+        function displayResults(data) {
+            var resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = ''; // 이전 결과 지우기
+
+            var table = document.createElement('table');
+            var thead = document.createElement('thead');
+            var tbody = document.createElement('tbody');
+
+            // 테이블 헤더 생성
+            var headerRow = document.createElement('tr');
+            if (data.length > 0) {
+                Object.keys(data[0]).forEach(function(key) {
+                    var th = document.createElement('th');
+                    th.textContent = key;
+                    headerRow.appendChild(th);
+                });
+            }
+            thead.appendChild(headerRow);
+
+            // 테이블 본문 생성
+            data.forEach(function(item) {
+                var row = document.createElement('tr');
+                Object.values(item).forEach(function(value) {
+                    var td = document.createElement('td');
+                    td.textContent = value;
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            resultsContainer.appendChild(table);
+        }
+    </script>
+</body>
+</html>
