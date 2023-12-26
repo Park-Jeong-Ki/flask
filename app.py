@@ -3,9 +3,10 @@ import pandas as pd
 from cryptography.fernet import Fernet
 import os
 from io import StringIO
-
+from flask_cors import CORS  # CORS를 위한 라이브러리 임포트
 
 app = Flask(__name__)
+CORS(app)  # CORS 설정 적용
 app.config['JSON_AS_ASCII'] = False
 
 @app.route('/')
@@ -16,7 +17,6 @@ def index():
 def load_key():
     key = b'TU0vRuj7uW0T2Gh81dwtC5qTs7djhmqUkzpWRlR06c0='
     return Fernet(key)
-
 
 # 암호화된 파일을 복호화하여 메모리에 로드하는 함수
 def load_data():
@@ -33,6 +33,7 @@ def load_data():
         return df
     else:
         return None
+
 # 키워드 검색을 수행하는 함수
 def search_keyword_in_columns(df, keyword):
     search_columns = ['감정평가요약', '특수권리분석', '참고사항']
@@ -40,7 +41,6 @@ def search_keyword_in_columns(df, keyword):
     result_df = df[keyword_filter]
     result_columns = ['사건번호', '소재지', '감정가', '토지면적', '건물면적']
     return result_df[result_columns]
-
 
 # API 루트
 @app.route('/search', methods=['GET'])
@@ -55,7 +55,6 @@ def search():
         return jsonify(result_df.to_dict(orient='records'))
     else:
         return jsonify({'error': 'Data not found'}), 404
-
 
 if __name__ == '__main__':
     app.run(debug=True)
