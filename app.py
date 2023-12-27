@@ -44,7 +44,7 @@ def search_keyword_in_columns(df, keyword):
     # TODO result_df에 새로운 컬럼을 추가하여 검색 결과를 표시할 수 있도록 구현
     # 주요 키워드 탐색 결과를 표시하는 컬럼을 추가하고, 해당 컬럼에 키워드가 포함된 문장을 입력
     result_df['주요키워드'] = '키워드가 포함된 문장'
-    return 
+    return result_df
 
 # API 루트
 @app.route('/search', methods=['GET'])
