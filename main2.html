@@ -29,31 +29,31 @@
     <!-- 로딩 이미지를 추가 -->
     <div id="loading">
         <!-- 이미지 태그 추가, 실제 이미지 URL로 'src'를 변경해야 함 -->
-        <img src="https://port-0-flask-9zxht12blqktv8kd.sel4.cloudtype.app/static/img/image.gif" class="loading-image" alt="검색중..." style="display:none;">
+        <img src="https://port-0-flask-9zxht12blqktv8kd.sel4.cloudtype.app/static/img/image.gif" class="loading-image" alt="검색중...">
     </div>
     <div id="search-results"></div>
 
     <script>
         // JavaScript 코드
         function searchKeyword() {
-            var keyword = document.getElementById('keyword-input').value;
-            var url = 'https://port-0-flask-9zxht12blqktv8kd.sel4.cloudtype.app/search';
-            var loadingImage = document.getElementById('loading').getElementsByTagName('img')[0];
-            
-            // 검색 중 이미지 표시
-            loadingImage.style.display = 'block';
+    var keyword = document.getElementById('keyword-input').value;
+    var url = 'https://port-0-flask-9zxht12blqktv8kd.sel4.cloudtype.app/search';
+    var loadingImage = document.getElementById('loading').getElementsByTagName('img')[0];
+    
+    // 검색 중 이미지 표시
+    loadingImage.style.display = 'block'; // 이미지를 보이게 설정
 
-            fetch(url + '?keyword=' + encodeURIComponent(keyword))
-                .then(response => response.json())
-                .then(data => {
-                    displayResults(data);
-                    loadingImage.style.display = 'none'; // 검색 완료시 이미지 숨김
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    loadingImage.style.display = 'none'; // 에러시 이미지 숨김
-                });
-        }
+    fetch(url + '?keyword=' + encodeURIComponent(keyword))
+        .then(response => response.json())
+        .then(data => {
+            displayResults(data);
+            loadingImage.style.display = 'none'; // 검색 완료시 이미지 숨김
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            loadingImage.style.display = 'none'; // 에러시 이미지 숨김
+        });
+}
 
         function displayResults(data) {
             var resultsContainer = document.getElementById('search-results');
