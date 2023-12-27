@@ -37,14 +37,21 @@ def load_data():
 # 키워드 검색을 수행하는 함수
 def search_keyword_in_columns(df, keyword):
     search_columns = ['감정평가요약', '특수권리분석', '참고사항']
-    keyword_filter = df[search_columns].apply(lambda x: x.str.contains(keyword, na=False, regex=True)).any(axis=1)
-    result_df = df[keyword_filter]
-    result_columns = ['사건번호']
-    result_df = result_df[result_columns]
-    # TODO result_df에 새로운 컬럼을 추가하여 검색 결과를 표시할 수 있도록 구현
-    # 주요 키워드 탐색 결과를 표시하는 컬럼을 추가하고, 해당 컬럼에 키워드가 포함된 문장을 입력
-    result_df['주요키워드'] = '키워드가 포함된 문장'
+    result_df = pd.DataFrame()
+
+    for index, row in df.iterrows():
+        for col in search_columns:
+            text = row[col]
+            if pd.isna(text):
+                continue
+            # 키워드가 포함된 문장 찾기
+            sentences = text.split('.')
+            for sentence in sentences:
+                if keyword in sentence:
+                    result_df = result_df.append({'사건번호': row['사건번호'], '주요키워드': sentence}, ignore_index=True)
+    
     return result_df
+
 
 # API 루트
 @app.route('/search', methods=['GET'])
