@@ -48,7 +48,7 @@ def search_keyword_in_columns(df, keyword):
             sentences = text.split('.')
             for sentence in sentences:
                 if keyword in sentence:
-                    result_df = result_df.append({'사건번호': row['사건번호'], '주요키워드': sentence}, ignore_index=True)
+                    result_df = result_df.append({'사건번호': row['사건번호'], '주요키워드탐색': sentence}, ignore_index=True)
     
     return result_df
 
