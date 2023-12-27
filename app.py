@@ -37,7 +37,7 @@ def load_data():
 # 키워드 검색을 수행하는 함수
 def search_keyword_in_columns(df, keyword):
     search_columns = ['감정평가요약', '특수권리분석', '참고사항']
-    result_df = pd.DataFrame(columns=['사건번호', '주요키워드'])
+    rows = []
 
     for index, row in df.iterrows():
         for col in search_columns:
@@ -48,10 +48,11 @@ def search_keyword_in_columns(df, keyword):
             sentences = text.split('.')
             for sentence in sentences:
                 if keyword in sentence:
-                    new_row = {'사건번호': row['사건번호'], '주요키워드': sentence.strip()}
-                    result_df = result_df.append(new_row, ignore_index=True)
-    
+                    rows.append({'사건번호': row['사건번호'], '주요키워드': sentence.strip()})
+
+    result_df = pd.DataFrame(rows)
     return result_df
+
 
 
 
