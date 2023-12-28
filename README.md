@@ -8,6 +8,8 @@
 <br/>
 <br/>
 
+# AWS 버전
+
 # Flask
 
 Python으로 구현된 Flask 어플리케이션 템플릿입니다.
