@@ -5,15 +5,15 @@ import os
 from io import StringIO
 from flask_cors import CORS
 
-application = Flask(__name__)
-CORS(application)
-application.config['JSON_AS_ASCII'] = False
+app = Flask(__name__)
+CORS(app)
+app.config['JSON_AS_ASCII'] = False
 
-@application.route('/')
+@app.route('/')
 def index():
     return "Flask 서버가 정상적으로 실행되고 있습니다. 검색을 위해 /search 라우트를 사용하세요."
 
-@application.route('/hello_world', methods=['GET'])
+@app.route('/hello_world', methods=['GET'])
 def hello_world():
     return "Hello World"
 
@@ -53,7 +53,7 @@ def search_keyword_in_columns(df, keyword):
     result_df = pd.DataFrame(rows)
     return result_df, len(rows)  # 결과 DataFrame과 검색된 결과의 개수를 반환
 
-@application.route('/search', methods=['GET'])
+@app.route('/search', methods=['GET'])
 def search():
     keyword = request.args.get('keyword')
     if not keyword:
@@ -67,4 +67,4 @@ def search():
         return jsonify({'error': 'Data not found'}), 404
 
 if __name__ == '__main__':
-    application.run(host='0.0.0.0', port=5000)
+    app.run
