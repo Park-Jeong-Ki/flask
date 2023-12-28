@@ -209,44 +209,48 @@
         }
 
         function displayResults(data, keyword) {
-            var resultsContainer = document.getElementById('search-results');
-            var regex = new RegExp(keyword, 'gi');
+    var resultsContainer = document.getElementById('search-results');
+    var regex = new RegExp(keyword, 'gi');
 
-            resultsContainer.innerHTML = '';
+    resultsContainer.innerHTML = '';
 
-            // 검색 결과 개수 표시
-            var countDiv = document.createElement('div');
-            countDiv.textContent = '검색 결과 개수: ' + data.count + '건'; // 결과 개수 표시
-            resultsContainer.appendChild(countDiv);
+    // 검색 결과 개수가 있는지 확인
+    if (data.count !== undefined) {
+        var countDiv = document.createElement('div');
+        countDiv.textContent = '검색 결과 개수: ' + data.count + '건';
+        resultsContainer.appendChild(countDiv);
+    }
 
-            var table = document.createElement('table');
-            var thead = document.createElement('thead');
-            var tbody = document.createElement('tbody');
+    // 검색 결과 배열이 있는지 확인
+    if (data.results && data.results.length > 0) {
+        var table = document.createElement('table');
+        var thead = document.createElement('thead');
+        var tbody = document.createElement('tbody');
 
-            var headerRow = document.createElement('tr');
-            if (data.results.length > 0) {
-                Object.keys(data.results[0]).forEach(function(key) {
-                    var th = document.createElement('th');
-                    th.textContent = key;
-                    headerRow.appendChild(th);
-                });
-            }
-            thead.appendChild(headerRow);
+        var headerRow = document.createElement('tr');
+        Object.keys(data.results[0]).forEach(function(key) {
+            var th = document.createElement('th');
+            th.textContent = key;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
 
-            data.results.forEach(function(item) { // results 배열을 순회
-                var row = document.createElement('tr');
-                Object.values(item).forEach(function(value) {
-                    var td = document.createElement('td');
-                    td.innerHTML = value.toString().replace(regex, '<span class="highlight">' + keyword + '</span>');
-                    row.appendChild(td);
-                });
-                tbody.appendChild(row);
+        data.results.forEach(function(item) {
+            var row = document.createElement('tr');
+            Object.values(item).forEach(function(value) {
+                var td = document.createElement('td');
+                td.innerHTML = value.toString().replace(regex, '<span class="highlight">' + keyword + '</span>');
+                row.appendChild(td);
             });
+            tbody.appendChild(row);
+        });
 
-            table.appendChild(thead);
-            table.appendChild(tbody);
-            resultsContainer.appendChild(table);
-        }
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        resultsContainer.appendChild(table);
+    }
+}
+
 
         document.getElementById('keyword-input').addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
