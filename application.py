@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import pandas as pd
 from cryptography.fernet import Fernet
 import os
@@ -11,7 +11,7 @@ application.config['JSON_AS_ASCII'] = False
 
 @application.route('/')
 def index():
-    return "Flask 서버가 정상적으로 실행되고 있습니다. 검색을 위해 /search 라우트를 사용하세요."
+    return render_template('index.html')
 
 @application.route('/hello_world', methods=['GET'])
 def hello_world():
