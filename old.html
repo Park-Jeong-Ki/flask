@@ -219,13 +219,17 @@ button {
         <div class="loader"></div>
     </div>
 
+    <!--검색 결과 수를 표시할 영역-->
+    <div id="search-results-num"></div>
+
+
     <!-- 검색 결과를 표시할 영역 -->
     <div id="search-results"></div>
     <script>
         // 검색어를 서버로 전송하고 결과를 표시하는 함수
         function searchKeyword() {
             var keyword = document.getElementById('keyword-input').value;
-            var url = 'https://port-0-flask-9zxht12blqktv8kd.sel4.cloudtype.app/search';
+            var url = 'https://port-0-flask-9zxht12blqktv8kd.sel4.cloudtype.app//search';
             var loadingImage = document.getElementById('loading');
 
             // 검색 중 이미지 표시
@@ -243,45 +247,58 @@ button {
                 });
         }
 
-        // 검색 결과를 표시하는 함수
-        function displayResults(data, keyword) { // 키워드 인자 추가
-            var resultsContainer = document.getElementById('search-results');
-            var regex = new RegExp(keyword, 'gi'); // 검색 키워드 강조를 위한 정규 표현식
+        function displayResults(data, keyword) {
+    var resultsContainer = document.getElementById('search-results');
+    var resultsNumContainer = document.getElementById('search-results-num'); // 검색 결과 수를 표시할 영역
+    var regex = new RegExp(keyword, 'gi'); // 검색 키워드 강조를 위한 정규 표현식
 
-            resultsContainer.innerHTML = '';
+    resultsContainer.innerHTML = ''; // 이전 검색 결과 초기화
+    resultsNumContainer.innerHTML = ''; // 이전 검색 결과 수 초기화
 
-            var table = document.createElement('table');
-            var thead = document.createElement('thead');
-            var tbody = document.createElement('tbody');
+    // data가 객체이고 data.results가 배열인 경우
+    if (data && Array.isArray(data.results)) {
+        // 검색 결과 개수를 표시하는 코드 부분
+        var resultsNumText = '검색 결과 개수: ' + data.results.length + '건';
+        resultsNumContainer.style.textAlign = 'right'; // 텍스트를 오른쪽으로 정렬
+        resultsNumContainer.textContent = resultsNumText;
 
-            // 테이블 헤더 생성
-            var headerRow = document.createElement('tr');
-            if (data.length > 0) {
-                Object.keys(data[0]).forEach(function(key) {
-                    var th = document.createElement('th');
-                    th.textContent = key;
-                    headerRow.appendChild(th);
-                });
-            }
-            thead.appendChild(headerRow);
+        var table = document.createElement('table');
+        var thead = document.createElement('thead');
+        var tbody = document.createElement('tbody');
 
-            // 테이블 본문 생성
-            data.forEach(function(item) {
-                var row = document.createElement('tr');
-                Object.values(item).forEach(function(value) {
-                    var td = document.createElement('td');
-                    // 키워드를 강조
-                    td.innerHTML = value.toString().replace(regex, '<span class="highlight">' + keyword + '</span>');
-                    row.appendChild(td);
-                });
-                tbody.appendChild(row);
+        // 테이블 헤더 생성
+        var headerRow = document.createElement('tr');
+        if (data.results.length > 0) {
+            Object.keys(data.results[0]).forEach(function(key) {
+                var th = document.createElement('th');
+                th.textContent = key;
+                headerRow.appendChild(th);
             });
-
-            table.appendChild(thead);
-            table.appendChild(tbody);
-            resultsContainer.appendChild(table);
-		  
         }
+        thead.appendChild(headerRow);
+
+        // 테이블 본문 생성
+        data.results.forEach(function(item) {
+            var row = document.createElement('tr');
+            Object.values(item).forEach(function(value) {
+                var td = document.createElement('td');
+                // 키워드 강조
+                td.innerHTML = value.toString().replace(regex, '<span class="highlight">' + keyword + '</span>');
+                row.appendChild(td);
+            });
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        resultsContainer.appendChild(table);
+    } else {
+        // 검색 결과가 없을 경우
+        resultsNumContainer.textContent = '검색 결과가 없습니다.';
+    }
+}
+
+
 	  
 	      // 키워드 입력창에 엔터 키 이벤트 리스너 추가
     document.getElementById('keyword-input').addEventListener('keyup', function(event) {
